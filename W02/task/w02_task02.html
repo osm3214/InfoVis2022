@@ -1,25 +1,33 @@
 <html>
 
 <head>
-  <title>W02: Example 06</title>
-</head>
-
-<body>
+  <title>W02: Task02</title>
   <script src="vec3.js"></script>
   <script>
-    var x = 5;
-    var y = 4;
-    var z = 8;
+    function calc() {
+      var x = Number(document.getElementById("x").value);
+      var y = Number(document.getElementById("y").value);
+      var z = Number(document.getElementById("z").value);
 
-    var v = new Vec3(x, y, z);
-    var min = v.min();
-    var max = v.max();
-    var mid = v.mid();
+      var v = new Vec3(x, y, z);
+      var min = v.min();
+      var max = v.max();
+      var mid = v.mid();
 
-    document.write(min);
-    document.write(max);
-    document.write(mid);
+      document.getElementById("result").innerHTML = "min = " + min + ", max = " + max + ", mid = " + mid;
+    }
   </script>
+</head>
+
+<body onload="calc()">
+  <p>x: <input type="number" id="x" value="5"></p>
+  <p>y: <input type="number" id="y" value="4"></p>
+  <p>z: <input type="number" id="z" value="8"></p>
+  <p>
+    <input type="button" onclick="calc()" value="calc">
+  </p>
+  <p id="result">min = , max = , mid = </p>
+
 </body>
 
 </html>

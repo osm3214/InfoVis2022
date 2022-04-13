@@ -1,41 +1,45 @@
 <html>
 
 <head>
-  <title>W02: Example 06</title>
+  <title>W02: Task03</title>
   <script src="vec3.js"></script>
   <script src="AreaOfTriangle.js"></script>
+  <script>
+    function calc() {
+      var v0 = new Vec3(Number(document.getElementById("v0_x").value), Number(document.getElementById("v0_y").value), Number(document.getElementById("v0_z").value));
+      var v1 = new Vec3(Number(document.getElementById("v1_x").value), Number(document.getElementById("v1_y").value), Number(document.getElementById("v1_z").value));
+      var v2 = new Vec3(Number(document.getElementById("v2_x").value), Number(document.getElementById("v2_y").value), Number(document.getElementById("v2_z").value));
+
+      var s = AreaOfTriangle(v0, v1, v2);
+
+      document.getElementById("result").innerHTML = "Result: " + s.toFixed(3);
+    }
+  </script>
 </head>
 
-<body>
-  v0: x<input type="number" id="v0_x">
-  y<input type="number" id="v0_y">
-  z<input type="number" id="v0_z">
-  <br>
-  v1: x<input type="number" id="v1_x">
-  y<input type="number" id="v1_y">
-  z<input type="number" id="v1_z">
-  <br>
-  v2: x<input type="number" id="v2_x">
-  y<input type="number" id="v2_y">
-  z<input type="number" id="v2_z">
-  <input type="button" onclick="e()" value="calc"><br>
-  Result: <p id="target"></p>
-
-
-  <script>
-    var x = 5;
-    var y = 4;
-    var z = 8;
-
-
-    var v0 = new Vec3(1, 2, 3);
-    var v1 = new Vec3(2, 6, 7);
-    var v2 = new Vec3(3, 9, 4);
-
-    var s = AreaOfTriangle(v0, v1, v2);
-
-    document.getElementById("target").innerHTML = s;
-  </script>
+<body onload="calc()">
+  <p>
+    v0:
+    x<input type="number" id="v0_x" value="5">
+    y<input type="number" id="v0_y" value="4">
+    z<input type="number" id="v0_z" value="8">
+  </p>
+  <p>
+    v1:
+    x<input type="number" id="v1_x" value="2">
+    y<input type="number" id="v1_y" value="5">
+    z<input type="number" id="v1_z" value="1">
+  </p>
+  <p>
+    v2:
+    x<input type="number" id="v2_x" value="3">
+    y<input type="number" id="v2_y" value="1">
+    z<input type="number" id="v2_z" value="2">
+  </p>
+  <p>
+    <input type="button" onclick="calc()" value="calc">
+  </p>
+  <p id="result">Result: </p>
 </body>
 
 </html>
