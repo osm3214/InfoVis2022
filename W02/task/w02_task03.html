@@ -1,0 +1,41 @@
+<html>
+
+<head>
+  <title>W02: Example 06</title>
+  <script src="vec3.js"></script>
+  <script src="AreaOfTriangle.js"></script>
+</head>
+
+<body>
+  v0: x<input type="number" id="v0_x">
+  y<input type="number" id="v0_y">
+  z<input type="number" id="v0_z">
+  <br>
+  v1: x<input type="number" id="v1_x">
+  y<input type="number" id="v1_y">
+  z<input type="number" id="v1_z">
+  <br>
+  v2: x<input type="number" id="v2_x">
+  y<input type="number" id="v2_y">
+  z<input type="number" id="v2_z">
+  <input type="button" onclick="e()" value="calc"><br>
+  Result: <p id="target"></p>
+
+
+  <script>
+    var x = 5;
+    var y = 4;
+    var z = 8;
+
+
+    var v0 = new Vec3(1, 2, 3);
+    var v1 = new Vec3(2, 6, 7);
+    var v2 = new Vec3(3, 9, 4);
+
+    var s = AreaOfTriangle(v0, v1, v2);
+
+    document.getElementById("target").innerHTML = s;
+  </script>
+</body>
+
+</html>
