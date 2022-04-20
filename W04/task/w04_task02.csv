@@ -1,4 +1,4 @@
-width,color
-100,red
-50,green
-80,blue
+width,color,text
+100,red,Label1
+50,green,Label2
+80,blue,Label3

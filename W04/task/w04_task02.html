@@ -7,20 +7,30 @@
 <body>
   <script src="http://d3js.org/d3.v4.min.js"></script>
   <script>
-    var padding = 10;
+    var padding_x = 50;
+    var padding_y = 10;
     var height = 20;
-    var svg = d3.select("body").append("svg");
+    var font_size = 15;
+    var svg = d3.select("body").append("svg").append("g");
     d3.csv("https://osm3214.github.io/InfoVis2022/W04/task/w04_task02.csv", draw)
     function draw(data) {
       svg.selectAll("rect")
         .data(data)
         .enter()
+        .append("g")
         .append("rect")
-        .attr("x", padding)
-        .attr("y", function (d, i) { return padding + i * (height + padding); })
+        .attr("x", padding_x)
+        .attr("y", function (d, i) { return padding_y + i * (height + padding_y); })
         .attr("width", function (d) { return d.width; })
         .attr("height", height)
-        .style("fill", function (d) { return d.color; });
+        .style("fill", function (d) { return d.color; })
+      svg.selectAll("g")
+        .append("text")
+        .attr("color", "black")
+        .attr("x", padding_x - 40)
+        .attr("y", function (d, i) { return padding_y + 0.5 * (height + font_size) + i * (height + padding_y); })
+        .attr("font-size", font_size)
+        .text(function (d) { return d.text; });
     }
   </script>
 </body>
