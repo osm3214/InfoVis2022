@@ -17,7 +17,7 @@
       .append("g")
       .attr("transform", "translate(" + (margin.left) + "," + margin.top + ")");
 
-    d3.csv("https://osm3214.github.io/InfoVis2022/W04/task/newly_confirmed_cases_daily.csv", draw)
+    d3.csv("https://osm3214.github.io/InfoVis2022/W04/task/w04_task02.csv", draw)
 
     function draw(data) {
       var x = d3.scaleBand()
@@ -40,7 +40,7 @@
         .text("Date");
 
       var y = d3.scaleLinear()
-        .domain([0, d3.max(data, function (d) { return parseInt(d.ALL); })])
+        .domain([0, d3.max(data, function (d) { return parseInt(d.value); })])
         .range([height, 0]);
 
       var yAxis = d3.axisLeft(y)
