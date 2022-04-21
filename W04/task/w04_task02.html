@@ -7,30 +7,79 @@
 <body>
   <script src="http://d3js.org/d3.v4.min.js"></script>
   <script>
-    var padding_x = 50;
-    var padding_y = 10;
-    var height = 20;
-    var font_size = 15;
-    var svg = d3.select("body").append("svg").append("g");
-    d3.csv("https://osm3214.github.io/InfoVis2022/W04/task/w04_task02.csv", draw)
+    var margin = { top: 50, right: 50, bottom: 100, left: 100 };
+    var width = 1000 - margin.left - margin.right;
+    var height = 500 - margin.bottom - margin.top;
+    var svg = d3.select("body")
+      .append("svg")
+      .attr("width", width + margin.left + margin.right)
+      .attr("height", height + margin.top + margin.bottom)
+      .append("g")
+      .attr("transform", "translate(" + (margin.left) + "," + margin.top + ")");
+
+    d3.csv("https://osm3214.github.io/InfoVis2022/W04/task/newly_confirmed_cases_daily.csv", draw)
+
     function draw(data) {
-      svg.selectAll("rect")
+      var x = d3.scaleBand()
+        .domain(data.map(function (d) { return d.date; }))
+        .range([0, width])
+        .padding(0.05);
+
+      var xAxis = d3.axisBottom(x)
+        .ticks(12)
+        .tickValues(["01/01", "02/01", "03/01", "04/01", "05/01", "06/01", "07/01", "08/01", "09/01", "10/01", "11/01", "12/01"])
+      svg.append("g")
+        .attr("class", "x axis")
+        .attr("transform", "translate(0," + height + ")")
+        .call(xAxis);
+
+      svg.append("text")
+        .attr("x", width / 2)
+        .attr("y", height + margin.top - 10)
+        .style("text-anchor", "middle")
+        .text("Date");
+
+      var y = d3.scaleLinear()
+        .domain([0, d3.max(data, function (d) { return parseInt(d.ALL); })])
+        .range([height, 0]);
+
+      var yAxis = d3.axisLeft(y)
+        .ticks(4)
+      svg.append("g")
+        .attr("class", "y axis")
+        .call(yAxis);
+
+      var yAxisGrid = d3.axisLeft(y).tickSize(-width).tickFormat('').ticks(4);
+      svg.append('g')
+        .attr('class', 'grid')
+        .attr("opacity", 0.2)
+        .call(yAxisGrid);
+
+      svg.append("text")
+        .attr("transform", "rotate(-90)")
+        .attr("y", 0 - 75)
+        .attr("x", 0 - (height / 2))
+        .attr("dy", "1em")
+        .style("text-anchor", "middle")
+        .text("# of new cases");
+
+      svg.append("text")
+        .attr("x", (width / 2))
+        .attr("y", 0 - (margin.top / 2))
+        .attr("text-anchor", "middle")
+        .text("New positives in 2021");
+
+      svg.selectAll(".bar")
         .data(data)
         .enter()
-        .append("g")
         .append("rect")
-        .attr("x", padding_x)
-        .attr("y", function (d, i) { return padding_y + i * (height + padding_y); })
-        .attr("width", function (d) { return d.width; })
-        .attr("height", height)
-        .style("fill", function (d) { return d.color; })
-      svg.selectAll("g")
-        .append("text")
-        .attr("color", "black")
-        .attr("x", padding_x - 40)
-        .attr("y", function (d, i) { return padding_y + 0.5 * (height + font_size) + i * (height + padding_y); })
-        .attr("font-size", font_size)
-        .text(function (d) { return d.text; });
+        .attr("class", "bar")
+        .attr("x", function (d) { return x(d.date); })
+        .attr("y", function (d) { return y(d.value); })
+        .attr("height", function (d) { return height - y(d.value); })
+        .attr("width", x.bandwidth())
+        .attr("fill", "royalblue");
+
     }
   </script>
 </body>
