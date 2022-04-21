@@ -1,7 +1,7 @@
-x,y,r,color
-20,20,10,red
-100,50,15,green
-70,80,20,yellow
-170,30,25,blue
-150,70,30,orange
-30,30,35,purple
+x,y,r,color,opacity
+20,20,10,red,0.5
+100,50,15,green,0.7
+70,80,20,yellow,1.0
+170,30,25,blue,0.6
+150,70,30,orange,0.9
+40,30,25,purple,0.8
