@@ -1,6 +1,6 @@
 d3.csv("https://osm3214.github.io/InfoVis2022/W08/task/w08_task01.csv")
     .then(data => {
-        console.log(data)
+        data.forEach(d => { d.value = +d.value; });
 
         var config = {
             parent: '#drawing_region',
@@ -26,7 +26,7 @@ class BarChart {
             margin: config.margin || { top: 10, right: 10, bottom: 20, left: 60 }
         }
         this.data = data;
-        console.log(data);
+
         this.init();
     }
 
