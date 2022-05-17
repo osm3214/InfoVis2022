@@ -1,22 +1,30 @@
-d3.csv("https://osm3214.github.io/InfoVis2022/W08/task/w08_task01.csv")
-    .then(data => {
-        console.log(data)
+var data = [
+    { x: 0, y: 100 },
+    { x: 40, y: 5 },
+    { x: 120, y: 80 },
+    { x: 150, y: 30 },
+    { x: 200, y: 50 }
+];
 
-        var config = {
-            parent: '#drawing_region',
-            width: 256,
-            height: 128,
-            margin: { top: 10, right: 10, bottom: 20, left: 60 }
-        };
+d3.csv("https://osm3214.github.io/InfoVis2022/W08/task/w08_task02.csv")
 
-        const barchart = new BarChart(config, data);
-        barchart.update();
-    })
-    .catch(error => {
-        console.log(error);
-    });
+var width = 256;
+var height = 128;
 
-class BarChart {
+var svg = d3.select('#drawing_region')
+    .attr('width', width)
+    .attr('height', height);
+
+const line = d3.line()
+    .x(d => d.x)
+    .y(d => d.y);
+
+svg.append('path')
+    .attr('d', line(data))
+    .attr('stroke', 'black')
+    .attr('fill', 'none');
+
+class LineChart {
 
     constructor(config, data) {
         this.config = {
@@ -89,4 +97,3 @@ class BarChart {
         self.yaxis_group
             .call(self.yaxis);
     }
-}
