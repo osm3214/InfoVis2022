@@ -7,6 +7,7 @@ d3.csv("https://osm3214.github.io/InfoVis2022/W04/task/w04_task01.csv")
             parent: '#drawing_region',
             width: 256,
             height: 256,
+            radius: 4,
             margin: { top: 30, right: 10, bottom: 50, left: 50 },
             inner_margin: { top: 15, right: 15, bottom: 15, left: 15 }
         };
@@ -25,6 +26,7 @@ class ScatterPlot {
             parent: config.parent,
             width: config.width || 256,
             height: config.height || 256,
+            radius: config.radius || 4,
             margin: config.margin || { top: 10, right: 10, bottom: 10, left: 10 },
             inner_margin: config.inner_margin || { top: 10, right: 10, bottom: 10, left: 10 }
         }
@@ -87,7 +89,7 @@ class ScatterPlot {
         circles
             .attr("cx", d => self.xscale(d.x))
             .attr("cy", d => self.yscale(d.y))
-            .attr("r", d => 4)
+            .attr("r", self.config.radius)
             .attr("fill", "steelblue")
             // .attr("opacity", d => d.opacity)
             // .attr("stroke", d => d.color)
@@ -130,7 +132,7 @@ class ScatterPlot {
                     .style('opacity', 1)
                     .html(`<div class="tooltip-label">Position</div>(${d.x}, ${d.y})`);
                 d3.select(e.srcElement)
-                    .attr("r", 8)
+                    .attr("r", self.config.radius * 1.5)
                     .attr("fill", "crimson")
             })
             .on('mousemove', (e) => {
@@ -143,7 +145,7 @@ class ScatterPlot {
                 d3.select('#tooltip')
                     .style('opacity', 0);
                 d3.select(e.srcElement)
-                    .attr("r", 4)
+                    .attr("r", self.config.radius)
                     .attr("fill", "steelblue")
             });
 
