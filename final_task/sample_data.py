@@ -3,5 +3,4 @@ if __name__ == "__main__":
         out_file.write(in_file.readline())
         for line in in_file.readlines():
             if line.startswith("2021"):
-                out_file.write(line)
-
+                out_file.write(line[5:])

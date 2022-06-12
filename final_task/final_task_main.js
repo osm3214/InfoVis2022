@@ -1,6 +1,6 @@
 d3.csv("https://osm3214.github.io/InfoVis2022/final_task/final_task.csv")
     .then(data => {
-        data.forEach(d => { d.value = +d.value; });
+        data.forEach(d => { d.ALL = +d.ALL; });
 
         var config = {
             parent: '#drawing_region',

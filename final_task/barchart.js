@@ -15,7 +15,7 @@ class BarChart {
 
     init() {
         let self = this;
-
+        console.log(self.data)
         self.svg = d3.select(self.config.parent)
             .attr('width', self.config.width)
             .attr('height', self.config.height);
@@ -35,7 +35,7 @@ class BarChart {
 
         self.xaxis = d3.axisBottom(self.xscale)
             .ticks(12)
-            .tickALLs(["01/01", "02/01", "03/01", "04/01", "05/01", "06/01", "07/01", "08/01", "09/01", "10/01", "11/01", "12/01"]);
+            .tickValues(["01/01", "02/01", "03/01", "04/01", "05/01", "06/01", "07/01", "08/01", "09/01", "10/01", "11/01", "12/01"]);
         self.yaxis = d3.axisLeft(self.yscale)
             .ticks(4);
 
