@@ -1,4 +1,4 @@
-class BarChart {
+class BarChart2 {
     constructor(config, data) {
         this.config = {
             parent: config.parent,
@@ -8,7 +8,11 @@ class BarChart {
             inner_margin: config.inner_margin || { top: 10, right: 0, bottom: 0, left: 0 },
             duration: config.duration || 1000
         }
+
         this.data = data;
+        this.prefecture = data.columns;
+        this.prefecture.shift();
+        this.prefecture.shift();
 
         this.init();
     }
@@ -33,8 +37,9 @@ class BarChart {
             .range([self.inner_height, 0]);
 
         self.xaxis = d3.axisBottom(self.xscale)
-            .ticks(12)
-            .tickValues(["1/1", "2/1", "3/1", "4/1", "5/1", "6/1", "7/1", "8/1", "9/1", "10/1", "11/1", "12/1"]);
+            .ticks(47)
+            .tickValues(self.prefecture);
+
         self.yaxis = d3.axisLeft(self.yscale)
             .ticks(4);
 
@@ -46,8 +51,29 @@ class BarChart {
     update() {
         let self = this;
 
-        self.xscale.domain(self.data.map(d => d.Date));
-        self.yscale.domain([0, d3.max(self.data, d => d.ALL) + self.config.inner_margin.top]);
+        if (current_date == -1) {
+            let total = {}
+            self.data.forEach(function (d) {
+                self.prefecture.forEach(function (col) {
+                    if (col in total) total[col] += parseInt(d[col]);
+                    else total[col] = parseInt(d[col]);
+                })
+            })
+            self.summed_data = d3.entries(total);
+        } else {
+            self.summed_data = {}
+            self.data.forEach(function (d) {
+                if (d.Date == current_date) {
+                    self.prefecture.forEach(function (col) {
+                        self.summed_data[col] = parseInt(d[col]);
+                    })
+                }
+            })
+            self.summed_data = d3.entries(self.summed_data)
+        }
+
+        self.xscale.domain(self.summed_data.map(d => d.key));
+        self.yscale.domain([0, d3.max(self.summed_data, d => d.value)]);
 
         self.render();
     }
@@ -56,22 +82,22 @@ class BarChart {
         let self = this;
 
         let bar = self.chart.selectAll(".bar")
-            .data(self.data)
+            .data(self.summed_data)
             .join("rect")
             .attr("class", "bar")
-            .attr("x", d => self.xscale(d.Date))
-            .attr("y", d => self.yscale(d.ALL))
+            .attr("x", d => self.xscale(d.key))
+            .attr("y", d => self.yscale(d.value))
             .attr("width", self.xscale.bandwidth())
-            .attr("height", d => (self.inner_height - self.yscale(d.ALL)))
+            .attr("height", d => (self.inner_height - self.yscale(d.value)))
             .attr("fill", "steelblue");
 
         self.chart.append("text")
             .attr("x", self.inner_width / 2)
-            .attr("y", self.config.margin.top + self.inner_height - 10)
+            .attr("y", self.config.margin.top + self.inner_height + 20)
             .attr("text-anchor", "middle")
             .attr("font-size", 12)
             .attr("font-family", "sans-serif")
-            .text("Date");
+            .text("Prefecture");
 
         self.chart.append("text")
             .attr("transform", `rotate(-90, ${self.config.margin.left - 110}, ${self.inner_height / 2})`)
@@ -83,7 +109,11 @@ class BarChart {
             .text("# of new cases");
 
         self.xaxis_group
-            .call(self.xaxis);
+            .call(self.xaxis)
+            .selectAll("text")
+            .attr("dx", "-30")
+            .attr("dy", "-8")
+            .attr("transform", "rotate(-90)");
 
         self.yaxis_group
             .call(self.yaxis);
@@ -92,7 +122,9 @@ class BarChart {
             .on("mouseover", (e, d) => {
                 d3.select("#tooltip")
                     .style("opacity", 1)
-                    .html(`<div class="tooltip-label">${d.Date}: ${d.ALL}</div>`);
+                    .html(`<div class="tooltip-label">${d.key}: ${d.value}</div>`);
+                d3.select(e.srcElement)
+                    .attr("fill", "crimson");
             })
             .on("mousemove", (e) => {
                 const padding = 10;
@@ -103,14 +135,8 @@ class BarChart {
             .on("mouseleave", (e) => {
                 d3.select("#tooltip")
                     .style("opacity", 0);
-            })
-            .on("click", (e, d) => {
-                current_date = d.Date
-                bar.attr("fill", "steelblue")
                 d3.select(e.srcElement)
-                    .attr("fill", "crimson")
-                Update_prefecture()
-
-            })
+                    .attr("fill", "steelblue");
+            });
     }
 }
