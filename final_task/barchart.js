@@ -35,7 +35,7 @@ class BarChart {
 
         self.xaxis = d3.axisBottom(self.xscale)
             .ticks(12)
-            .tickValues(["01/01", "02/01", "03/01", "04/01", "05/01", "06/01", "07/01", "08/01", "09/01", "10/01", "11/01", "12/01"]);
+            .tickALLs(["01/01", "02/01", "03/01", "04/01", "05/01", "06/01", "07/01", "08/01", "09/01", "10/01", "11/01", "12/01"]);
         self.yaxis = d3.axisLeft(self.yscale)
             .ticks(4);
 
@@ -47,9 +47,9 @@ class BarChart {
     update() {
         let self = this;
 
-        self.xscale.domain(self.data.map(d => d.date));
-        self.yscale.domain([0, d3.max(self.data, d => d.value) + self.config.inner_margin.top]);
-        console.log(d3.max(self.data, d => d.value))
+        self.xscale.domain(self.data.map(d => d.Date));
+        self.yscale.domain([0, d3.max(self.data, d => d.ALL) + self.config.inner_margin.top]);
+        console.log(d3.max(self.data, d => d.ALL))
 
         self.render();
     }
@@ -57,29 +57,58 @@ class BarChart {
     render() {
         let self = this;
 
-        self.chart.selectAll(".bar")
+        let bar = self.chart.selectAll(".bar")
             .data(self.data)
-            .enter()
-            .append("rect")
+            .join("rect")
             .attr("class", "bar")
-            .attr("x", d => self.xscale(d.date))
-            .attr("y", d => self.yscale(d.value))
+            .attr("x", d => self.xscale(d.Date))
+            .attr("y", d => self.yscale(d.ALL))
             .attr("width", self.xscale.bandwidth())
-            .attr("height", d => (self.inner_height - self.yscale(d.value)));
+            .attr("height", d => (self.inner_height - self.yscale(d.ALL)))
+            .attr("fill", "steelblue");
 
-        self.chart.selectAll("text")
-            .append("text")
-            .attr("x", 0)
-            .attr("y", self.config.height / 2)
+        self.chart.append("text")
+            .attr("x", self.inner_width / 2)
+            .attr("y", self.config.margin.top + self.inner_height - 10)
             .attr("text-anchor", "middle")
             .attr("font-size", 12)
             .attr("font-family", "sans-serif")
-            .text("# of new cases");
+            .text("Date");
+
+        self.chart.append("text")
+            .attr("transform", `rotate(-90, ${self.config.margin.left - 110}, ${self.inner_height / 2})`)
+            .attr("x", self.config.margin.left - 110)
+            .attr("y", self.inner_height / 2)
+            .attr("text-anchor", "middle")
+            .attr("font-size", 12)
+            .attr("font-family", "sans-serif")
+            .text("# of new cases in 2021");
 
         self.xaxis_group
             .call(self.xaxis);
 
         self.yaxis_group
             .call(self.yaxis);
+
+        bar
+            .on("mouseover", (e, d) => {
+                d3.select("#tooltip")
+                    .style("opacity", 1)
+                    .html(`<div class="tooltip-label">${d.Date}: ${d.ALL}</div>`);
+                d3.select(e.srcElement)
+                    .attr("fill", "crimson");
+            })
+            .on("mousemove", (e) => {
+                const padding = 10;
+                d3.select("#tooltip")
+                    .style("left", (e.pageX + padding) + "px")
+                    .style("top", (e.pageY + padding) + "px");
+            })
+            .on("mouseleave", (e) => {
+                d3.select("#tooltip")
+                    .style("opacity", 0);
+                d3.select(e.srcElement)
+                    .attr("fill", "steelblue");
+            });
     }
 }
